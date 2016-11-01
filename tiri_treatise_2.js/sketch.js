@@ -31,25 +31,26 @@ function setup() {
   // delay.process() accepts 4 parameters:
   // source, delayTime, feedback, filter frequency
   // play with these numbers!!
-  delay.process(input, .102, .7, 2300);
+  delay.process(input, 0.1, 0.7, 2000);
+  input.disconnect();
 
   // play the noise with an envelope,
   // a series of fades ( time / value pairs )
-  env = new p5.Env(.01, 0.2, .2, .1);
+  //env = new p5.Env(.01, 0.2, .2, .1);
 
   osc = new p5.Oscillator();
-  osc.setType('sine');
-  osc.freq(240);
+  osc.setType('square');
+  osc.freq(440);
   osc.amp(0);
   osc.start();
-  fft = new p5.FFT();
+  //fft = new p5.FFT();
 
   // If the volume > 0.1,  a rect is drawn at a random location.
   // The louder the volume, the larger the rectangle.
-  threshold = 0.1;
-  levelOne = 0.2;
-  levelTwo = 0.3;
-  levelMax = 0.4;
+  threshold = 0.03;
+  levelOne = 0.1;
+  levelTwo = 0.15;
+  levelMax = 0.2;
   volume = 0;
 
 }
@@ -57,12 +58,17 @@ function setup() {
 function draw() {
   // Get the overall volume (between 0 and 1.0)
   volume = input.getLevel();
-  //console.log(volume);
+  console.log(volume);
 
 
   //update levelMax
   if (volume > levelMax) {
     volumeMax = volume;
+  }
+  
+  //limit levelMax
+  if (levelMax > 0.7) {
+    levelMax = 0.5;
   }
 
 
@@ -98,11 +104,11 @@ function draw() {
 
 
   // for fft
-  var freq = map(mouseX, 0, 800, 20, 15000);
+  var freq = map(mouseX, 0, width, 20, 15000);
   freq = constrain(freq, 1, 20000);
   osc.freq(freq);
 
-  var spectrum = fft.analyze();
+  // var spectrum = fft.analyze();
 
 }
 
